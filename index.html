@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>우리 아가의 기적 🌸</title>
+  <title>BABYBAB 🌸</title>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,157 +16,73 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: #f48fb1; border-radius: 4px; }
 
-    @keyframes floatUp {
-      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.13; }
-      50% { transform: translateY(-28px) rotate(8deg); opacity: 0.22; }
-    }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    @keyframes floatUp { 0%,100%{transform:translateY(0) rotate(0deg);opacity:.13} 50%{transform:translateY(-28px) rotate(8deg);opacity:.22} }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
 
-    .float-emoji {
-      position: fixed; pointer-events: none; animation: floatUp 9s ease-in-out infinite; font-size: 1.4rem; z-index: 0;
-    }
+    .float-emoji { position:fixed; pointer-events:none; animation:floatUp 9s ease-in-out infinite; z-index:0; }
+    .container { max-width:680px; margin:0 auto; padding:44px 20px 90px; position:relative; z-index:1; }
 
-    .container {
-      max-width: 680px; margin: 0 auto; padding: 44px 20px 90px; position: relative; z-index: 1;
-    }
+    .header { text-align:center; margin-bottom:40px; animation:fadeUp 0.8s ease; }
+    .header-logo { font-family:'Gowun Dodum',sans-serif; font-size:clamp(2rem,6vw,2.8rem); font-weight:700; letter-spacing:4px; background:linear-gradient(135deg,#e91e8c 0%,#9c27b0 50%,#3f51b5 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:block; margin-bottom:6px; animation:pulse 3.2s ease-in-out infinite; }
+    .header-sub { color:#9e8ea8; font-size:0.88rem; line-height:1.7; }
+    .header-sub span { font-size:0.73rem; color:#b8a8c8; }
 
-    /* Header */
-    .header { text-align: center; margin-bottom: 40px; animation: fadeUp 0.8s ease; }
-    .header-emoji { font-size: 3.6rem; animation: pulse 3.2s ease-in-out infinite; display: block; margin-bottom: 10px; }
-    .header h1 {
-      font-family: 'Gowun Dodum', sans-serif; font-size: clamp(1.9rem, 5vw, 2.5rem); font-weight: 700;
-      background: linear-gradient(135deg, #e91e8c 0%, #9c27b0 50%, #3f51b5 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 10px; line-height: 1.2;
-    }
-    .header p { color: #9e8ea8; font-size: 0.9rem; line-height: 1.7; }
-    .header p span { font-size: 0.75rem; color: #b8a8c8; }
+    .steps { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:32px; }
+    .step { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .step-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; transition:all 0.4s; }
+    .step-circle.done { background:linear-gradient(135deg,#4caf50,#2e7d32); color:#fff; box-shadow:0 4px 12px rgba(76,175,80,0.4); }
+    .step-circle.active { background:linear-gradient(135deg,#e91e8c,#9c27b0); color:#fff; box-shadow:0 4px 12px rgba(233,30,140,0.4); }
+    .step-circle.idle { background:rgba(200,200,200,0.4); color:#bbb; }
+    .step-label { font-size:0.68rem; color:#9e8ea8; font-family:'Gowun Dodum',sans-serif; font-weight:700; white-space:nowrap; }
+    .step-line { width:40px; height:2px; background:rgba(200,200,200,0.4); margin-bottom:18px; transition:all 0.4s; }
+    .step-line.done { background:linear-gradient(90deg,#4caf50,#a5d6a7); }
 
-    /* Tabs */
-    .tabs {
-      display: flex; gap: 10px; margin-bottom: 24px;
-      background: rgba(255,255,255,0.5); backdrop-filter: blur(10px);
-      border-radius: 20px; padding: 8px; border: 1px solid rgba(255,255,255,0.9);
-    }
-    .tab-btn {
-      flex: 1; padding: 14px 8px; border: none; border-radius: 16px; cursor: pointer;
-      font-family: 'Gowun Dodum', sans-serif; font-weight: 700; font-size: 0.88rem;
-      display: flex; flex-direction: column; align-items: center; gap: 4;
-      transition: all 0.3s; color: #9e8ea8; background: transparent;
-    }
-    .tab-btn .tab-emoji { font-size: 1.5rem; }
-    .tab-btn.active {
-      background: linear-gradient(135deg, #e91e8c, #9c27b0); color: #fff;
-      box-shadow: 0 6px 22px rgba(233,30,140,0.32);
-    }
+    .upload-zone { background:rgba(255,255,255,0.68); backdrop-filter:blur(14px); border:2.5px dashed #f48fb1; border-radius:22px; padding:24px 18px; cursor:pointer; transition:all 0.3s; text-align:center; min-height:185px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 22px rgba(0,0,0,0.06); margin-bottom:16px; }
+    .upload-zone.optional { border-color:#b2dfdb; }
+    .upload-zone:hover { transform:scale(1.015); box-shadow:0 8px 30px rgba(233,30,140,0.12); }
+    .upload-zone.drag { background:rgba(255,200,220,0.35); border-color:#e91e8c; transform:scale(1.025); }
+    .zone-emoji { font-size:2.8rem; }
+    .zone-label { font-family:'Gowun Dodum',sans-serif; font-weight:700; font-size:0.97rem; color:#5d4e6d; }
+    .zone-hint { font-size:0.77rem; color:#9e8ea8; line-height:1.55; white-space:pre-line; }
+    .badge-required { background:linear-gradient(135deg,#f48fb1,#e91e8c); color:#fff; font-size:0.67rem; padding:3px 10px; border-radius:20px; font-weight:700; }
+    .badge-optional { background:rgba(178,223,219,0.5); color:#00695c; font-size:0.67rem; padding:3px 10px; border-radius:20px; font-weight:700; }
+    .preview-wrap { position:relative; width:100%; }
+    .preview-wrap img { width:100%; max-height:155px; object-fit:contain; border-radius:14px; }
+    .preview-remove { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.55); color:#fff; border:none; border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; }
 
-    /* Upload zones */
-    .upload-grid { display: grid; gap: 16px; margin-bottom: 24px; }
-    .upload-zone {
-      background: rgba(255,255,255,0.68); backdrop-filter: blur(14px);
-      border: 2.5px dashed #f48fb1; border-radius: 22px; padding: 24px 18px;
-      cursor: pointer; transition: all 0.3s; text-align: center; min-height: 185px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-      box-shadow: 0 4px 22px rgba(0,0,0,0.06);
-    }
-    .upload-zone.optional { border-color: #b2dfdb; }
-    .upload-zone:hover { transform: scale(1.015); box-shadow: 0 8px 30px rgba(233,30,140,0.12); }
-    .upload-zone.drag { background: rgba(255,200,220,0.35); border-color: #e91e8c; transform: scale(1.025); }
-    .upload-zone .zone-emoji { font-size: 2.8rem; }
-    .upload-zone .zone-label { font-family: 'Gowun Dodum', sans-serif; font-weight: 700; font-size: 0.97rem; color: #5d4e6d; }
-    .upload-zone .zone-hint { font-size: 0.77rem; color: #9e8ea8; line-height: 1.55; white-space: pre-line; }
-    .badge-required { background: linear-gradient(135deg,#f48fb1,#e91e8c); color: #fff; font-size: 0.67rem; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
-    .badge-optional { background: rgba(178,223,219,0.5); color: #00695c; font-size: 0.67rem; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+    .cta-btn { width:100%; padding:18px; border:none; border-radius:20px; font-size:1.08rem; font-family:'Gowun Dodum',sans-serif; font-weight:700; cursor:pointer; transition:all 0.3s; letter-spacing:0.4px; background:linear-gradient(135deg,#e91e8c,#9c27b0); color:#fff; box-shadow:0 8px 32px rgba(233,30,140,0.38); }
+    .cta-btn:disabled { background:rgba(210,210,210,0.55); color:#fff; box-shadow:none; cursor:not-allowed; }
+    .cta-btn:not(:disabled):hover { transform:translateY(-2px); }
+    .btn-secondary { padding:15px; background:rgba(255,255,255,0.8); color:#7a6a8a; border:2px solid rgba(156,39,176,0.28); border-radius:18px; font-size:0.9rem; font-family:'Gowun Dodum',sans-serif; font-weight:700; cursor:pointer; transition:all 0.3s; }
+    .action-btns { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
 
-    .preview-wrap { position: relative; width: 100%; }
-    .preview-wrap img { width: 100%; max-height: 155px; object-fit: contain; border-radius: 14px; }
-    .preview-remove {
-      position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.55); color: #fff;
-      border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer;
-      font-size: 13px; display: flex; align-items: center; justify-content: center;
-    }
+    .spinner { text-align:center; padding:52px 20px; animation:fadeUp 0.5s ease; }
+    .spinner-emoji { font-size:3.8rem; animation:spin 1.8s linear infinite; display:inline-block; margin-bottom:16px; }
+    .spinner-text { font-family:'Gowun Dodum',sans-serif; font-size:1.05rem; color:#e91e8c; font-weight:700; }
+    .spinner-sub { font-size:0.82rem; color:#9e8ea8; margin-top:8px; line-height:1.6; }
 
-    /* Info box */
-    .info-box {
-      background: rgba(255,255,255,0.55); backdrop-filter: blur(8px);
-      border-radius: 18px; padding: 14px 18px; margin-bottom: 22px;
-      border: 1px solid rgba(255,255,255,0.85); font-size: 0.82rem; color: #7a6a8a; line-height: 1.7;
-    }
+    .result-card { background:rgba(255,255,255,0.85); backdrop-filter:blur(16px); border-radius:24px; overflow:hidden; box-shadow:0 8px 40px rgba(0,0,0,0.09); border:1px solid rgba(255,255,255,0.92); animation:fadeUp 0.7s ease; margin-bottom:16px; }
+    .result-card-header { padding:16px 20px 12px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(0,0,0,0.05); }
+    .rc-emoji { font-size:1.4rem; }
+    .rc-title { font-family:'Gowun Dodum',sans-serif; font-weight:700; font-size:1rem; color:#5d4e6d; }
+    .rc-sub { font-size:0.74rem; color:#9e8ea8; }
+    .result-card-body { padding:16px; }
+    .result-card-body img { width:100%; border-radius:14px; display:block; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+    .result-card-footer { padding:0 16px 16px; text-align:right; }
+    .download-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,#e91e8c,#9c27b0); color:#fff; padding:8px 18px; border-radius:20px; font-size:0.8rem; font-family:'Gowun Dodum',sans-serif; font-weight:700; text-decoration:none; box-shadow:0 4px 14px rgba(233,30,140,0.3); }
 
-    /* Error */
-    .error-box {
-      background: rgba(255,82,82,0.1); border: 1px solid #ff5252;
-      border-radius: 16px; padding: 16px; margin-bottom: 18px; color: #c62828; font-size: 0.86rem;
-    }
+    .step2-panel { background:rgba(255,255,255,0.7); backdrop-filter:blur(12px); border-radius:24px; padding:24px; border:1px solid rgba(255,255,255,0.9); box-shadow:0 4px 24px rgba(0,0,0,0.06); margin-top:4px; animation:fadeUp 0.6s ease; }
+    .step2-title { font-family:'Gowun Dodum',sans-serif; font-size:1.05rem; font-weight:700; color:#5d4e6d; margin-bottom:6px; }
+    .step2-desc { font-size:0.8rem; color:#9e8ea8; margin-bottom:18px; line-height:1.6; }
 
-    /* CTA button */
-    .cta-btn {
-      width: 100%; padding: 18px; border: none; border-radius: 20px;
-      font-size: 1.08rem; font-family: 'Gowun Dodum', sans-serif; font-weight: 700;
-      cursor: pointer; transition: all 0.3s; letter-spacing: 0.4px;
-      background: linear-gradient(135deg,#e91e8c,#9c27b0); color: #fff;
-      box-shadow: 0 8px 32px rgba(233,30,140,0.38);
-    }
-    .cta-btn:disabled { background: rgba(210,210,210,0.55); color: #fff; box-shadow: none; cursor: not-allowed; }
-    .cta-btn:not(:disabled):hover { transform: translateY(-2px); }
-
-    /* Spinner */
-    .spinner { text-align: center; padding: 52px 20px; animation: fadeUp 0.5s ease; }
-    .spinner-emoji { font-size: 3.8rem; animation: spin 1.8s linear infinite; display: inline-block; margin-bottom: 16px; }
-    .spinner-text { font-family: 'Gowun Dodum', sans-serif; font-size: 1.05rem; color: #e91e8c; font-weight: 700; }
-    .spinner-sub { font-size: 0.82rem; color: #9e8ea8; margin-top: 8px; line-height: 1.6; }
-
-    /* Result */
-    .result-header {
-      background: linear-gradient(135deg,rgba(233,30,140,0.1),rgba(156,39,176,0.1));
-      border-radius: 24px; padding: 20px; text-align: center; margin-bottom: 22px;
-      border: 1px solid rgba(233,30,140,0.18); animation: fadeUp 0.7s ease;
-    }
-    .result-header h2 { font-family: 'Gowun Dodum', sans-serif; font-size: 1.3rem; color: #5d4e6d; margin: 8px 0 5px; }
-    .result-header p { color: #9e8ea8; font-size: 0.82rem; }
-
-    .result-card {
-      background: rgba(255,255,255,0.85); backdrop-filter: blur(16px);
-      border-radius: 24px; overflow: hidden;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.09); border: 1px solid rgba(255,255,255,0.92);
-      animation: fadeUp 0.7s ease; margin-bottom: 20px;
-    }
-    .result-card-header { padding: 16px 20px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-    .result-card-header .rc-emoji { font-size: 1.4rem; }
-    .result-card-header .rc-title { font-family: 'Gowun Dodum', sans-serif; font-weight: 700; font-size: 1rem; color: #5d4e6d; }
-    .result-card-header .rc-sub { font-size: 0.74rem; color: #9e8ea8; }
-    .result-card-body { padding: 16px; }
-    .result-card-body img { width: 100%; border-radius: 14px; display: block; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-    .result-card-footer { padding: 0 16px 16px; text-align: right; }
-    .download-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: linear-gradient(135deg,#e91e8c,#9c27b0); color: #fff;
-      padding: 8px 18px; border-radius: 20px; font-size: 0.8rem;
-      font-family: 'Gowun Dodum', sans-serif; font-weight: 700; text-decoration: none;
-      box-shadow: 0 4px 14px rgba(233,30,140,0.3);
-    }
-
-    .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
-    .btn-secondary {
-      padding: 15px; background: rgba(255,255,255,0.8); color: #7a6a8a;
-      border: 2px solid rgba(156,39,176,0.28); border-radius: 18px;
-      font-size: 0.9rem; font-family: 'Gowun Dodum', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.3s;
-    }
-    .btn-primary {
-      padding: 15px; background: linear-gradient(135deg,#e91e8c,#9c27b0); color: #fff;
-      border: none; border-radius: 18px;
-      font-size: 0.9rem; font-family: 'Gowun Dodum', sans-serif; font-weight: 700; cursor: pointer;
-      box-shadow: 0 4px 18px rgba(233,30,140,0.3); transition: all 0.3s;
-    }
-
-    .hidden { display: none !important; }
+    .error-box { background:rgba(255,82,82,0.1); border:1px solid #ff5252; border-radius:16px; padding:16px; margin-bottom:18px; color:#c62828; font-size:0.86rem; }
+    .hidden { display:none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Floating emojis -->
   <div class="float-emoji" style="left:8%;top:4%;animation-delay:0s;font-size:12px">💗</div>
   <div class="float-emoji" style="left:20%;top:22%;animation-delay:1.1s;font-size:19px">🌸</div>
   <div class="float-emoji" style="left:32%;top:40%;animation-delay:2.2s;font-size:12px">✨</div>
@@ -178,57 +94,87 @@
 
   <div class="container">
 
-    <!-- Header -->
     <div class="header">
-      <span class="header-emoji">🌸</span>
-      <h1>우리 아가의 기적</h1>
-      <p>초음파 사진으로 아가의 모습을 예측해요 💗<br/><span>Powered by Gemini AI</span></p>
+      <span class="header-logo">BABYBAB</span>
+      <p class="header-sub">초음파 사진으로 아가의 모습을 예측해요 💗<br/><span>Powered by Gemini AI</span></p>
     </div>
 
-    <!-- Upload section -->
-    <div id="upload-section">
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab-btn active" id="tab-born" onclick="switchTab('born')">
-          <span class="tab-emoji">👶</span>태어날 모습 예측
-        </button>
-        <button class="tab-btn" id="tab-100days" onclick="switchTab('100days')">
-          <span class="tab-emoji">🎂</span>100일 모습 예측
-        </button>
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle active" id="sc1">1</div>
+        <div class="step-label">초음파 업로드</div>
       </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step">
+        <div class="step-circle idle" id="sc2">2</div>
+        <div class="step-label">태어날 모습</div>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step">
+        <div class="step-circle idle" id="sc3">3</div>
+        <div class="step-label">100일 모습</div>
+      </div>
+    </div>
 
-      <!-- Upload zones -->
-      <div class="upload-grid">
-        <!-- Ultrasound -->
-        <div class="upload-zone" id="zone-ultrasound"
-          onclick="document.getElementById('input-ultrasound').click()"
-          ondragover="onDrag(event,'zone-ultrasound',true)"
-          ondragleave="onDrag(event,'zone-ultrasound',false)"
-          ondrop="onDrop(event,'ultrasound')">
-          <input type="file" id="input-ultrasound" accept="image/*" style="display:none" onchange="handleFile(event,'ultrasound')" />
-          <div id="zone-ultrasound-empty">
-            <div class="zone-emoji">🩻</div>
-            <div class="zone-label">아기 초음파 사진</div>
-            <div class="zone-hint">초음파 사진을 올려주세요&#10;아가의 모습을 유추하는데 사용돼요</div>
-            <span class="badge-required">필수</span>
-          </div>
-          <div id="zone-ultrasound-preview" class="hidden preview-wrap">
-            <img id="preview-ultrasound" src="" alt="초음파" />
-            <button class="preview-remove" onclick="removeFile(event,'ultrasound')">✕</button>
+    <!-- STEP 1 -->
+    <div id="step1-section" style="animation:fadeUp 0.6s ease">
+      <div class="upload-zone" id="zone-ultrasound"
+        onclick="document.getElementById('input-ultrasound').click()"
+        ondragover="onDrag(event,'zone-ultrasound',true)"
+        ondragleave="onDrag(event,'zone-ultrasound',false)"
+        ondrop="onDropFile(event,'ultrasound')">
+        <input type="file" id="input-ultrasound" accept="image/*" style="display:none" onchange="handleFile(event,'ultrasound')" />
+        <div id="zone-ultrasound-empty">
+          <div class="zone-emoji">🩻</div>
+          <div class="zone-label">아기 초음파 사진</div>
+          <div class="zone-hint">초음파 사진을 올려주세요&#10;아가의 태어날 모습을 예측해드려요</div>
+          <span class="badge-required">필수</span>
+        </div>
+        <div id="zone-ultrasound-preview" class="hidden preview-wrap">
+          <img id="preview-ultrasound" src="" alt="초음파" />
+          <button class="preview-remove" onclick="removeFile(event,'ultrasound')">✕</button>
+        </div>
+      </div>
+      <div class="error-box hidden" id="error-step1"></div>
+      <button class="cta-btn" id="btn-step1" onclick="runBorn()" disabled>초음파 사진을 먼저 올려주세요</button>
+    </div>
+
+    <!-- SPINNER -->
+    <div class="spinner hidden" id="spinner">
+      <div class="spinner-emoji">🍼</div>
+      <div class="spinner-text" id="spinner-text">아가의 모습을 그리는 중...</div>
+      <div class="spinner-sub">Gemini AI가 열심히 작업하고 있어요 💗<br/>잠시만 기다려주세요 (10~20초)</div>
+    </div>
+
+    <!-- STEP 2: 태어날 모습 결과 + 100일 유도 -->
+    <div id="step2-section" class="hidden">
+      <div class="result-card">
+        <div class="result-card-header">
+          <span class="rc-emoji">👶</span>
+          <div>
+            <div class="rc-title">태어날 아기 모습</div>
+            <div class="rc-sub">초음파로 유추한 신생아 모습</div>
           </div>
         </div>
+        <div class="result-card-body"><img id="born-result-img" src="" alt="태어날 모습" /></div>
+        <div class="result-card-footer">
+          <a class="download-btn" id="born-download-btn" href="#" download="BABYBAB_태어날모습.png">⬇ 저장하기</a>
+        </div>
+      </div>
 
-        <!-- Couple photo (100days only) -->
-        <div class="upload-zone optional hidden" id="zone-couple"
+      <div class="step2-panel">
+        <div class="step2-title">🎂 100일 모습도 보고 싶으세요?</div>
+        <div class="step2-desc">엄마 아빠 사진을 올리면 닮은꼴이 반영된 100일 사진을 만들어드려요!<br/>사진 없이도 생성 가능해요 😊</div>
+        <div class="upload-zone optional" id="zone-couple"
           onclick="document.getElementById('input-couple').click()"
           ondragover="onDrag(event,'zone-couple',true)"
           ondragleave="onDrag(event,'zone-couple',false)"
-          ondrop="onDrop(event,'couple')">
+          ondrop="onDropFile(event,'couple')">
           <input type="file" id="input-couple" accept="image/*" style="display:none" onchange="handleFile(event,'couple')" />
           <div id="zone-couple-empty">
             <div class="zone-emoji">👨‍👩‍👧</div>
             <div class="zone-label">엄마 & 아빠 사진</div>
-            <div class="zone-hint">부모님 사진을 올리면&#10;닮은꼴이 반영된 100일 사진을 만들어요!</div>
+            <div class="zone-hint">부모님 사진을 올리면&#10;닮은꼴이 반영돼요!</div>
             <span class="badge-optional">선택</span>
           </div>
           <div id="zone-couple-preview" class="hidden preview-wrap">
@@ -236,52 +182,49 @@
             <button class="preview-remove" onclick="removeFile(event,'couple')">✕</button>
           </div>
         </div>
+        <div class="error-box hidden" id="error-step2"></div>
+        <button class="cta-btn" onclick="run100days()">✨ 100일 모습 보기</button>
       </div>
 
-      <!-- Info -->
-      <div class="info-box" id="info-box">
-        🩻 초음파 사진을 분석해서 신생아 때의 실제 모습을 AI로 생성해요
+      <div class="action-btns">
+        <button class="btn-secondary" onclick="retryBorn()">🔄 태어날 모습 다시</button>
+        <button class="btn-secondary" onclick="resetAll()">🏠 처음으로</button>
       </div>
-
-      <!-- Error -->
-      <div class="error-box hidden" id="error-box"></div>
-
-      <!-- CTA -->
-      <button class="cta-btn" id="cta-btn" onclick="run()" disabled>초음파 사진을 먼저 올려주세요</button>
     </div>
 
-    <!-- Spinner -->
-    <div class="spinner hidden" id="spinner">
-      <div class="spinner-emoji">🍼</div>
-      <div class="spinner-text" id="spinner-text">아가의 모습을 그리는 중...</div>
-      <div class="spinner-sub">Gemini AI가 열심히 작업하고 있어요 💗<br/>잠시만 기다려주세요 (10~20초)</div>
-    </div>
-
-    <!-- Result -->
-    <div class="hidden" id="result-section">
-      <div class="result-header">
-        <div style="font-size:2.4rem">🎊</div>
-        <h2>완성됐어요!</h2>
-        <p>우리 아가의 모습이에요 💗</p>
-      </div>
+    <!-- STEP 3: 두 결과 모두 -->
+    <div id="step3-section" class="hidden">
       <div class="result-card">
         <div class="result-card-header">
-          <span class="rc-emoji" id="result-emoji">👶</span>
+          <span class="rc-emoji">👶</span>
           <div>
-            <div class="rc-title" id="result-title">태어날 아기 모습</div>
-            <div class="rc-sub" id="result-sub">초음파로 유추한 신생아 모습</div>
+            <div class="rc-title">태어날 아기 모습</div>
+            <div class="rc-sub">초음파로 유추한 신생아 모습</div>
           </div>
         </div>
-        <div class="result-card-body">
-          <img id="result-img" src="" alt="결과" />
-        </div>
+        <div class="result-card-body"><img id="born-result-img2" src="" alt="태어날 모습" /></div>
         <div class="result-card-footer">
-          <a class="download-btn" id="download-btn" href="#" download="우리아가.png">⬇ 저장하기</a>
+          <a class="download-btn" id="born-download-btn2" href="#" download="BABYBAB_태어날모습.png">⬇ 저장하기</a>
         </div>
       </div>
+
+      <div class="result-card">
+        <div class="result-card-header">
+          <span class="rc-emoji">🎂</span>
+          <div>
+            <div class="rc-title">100일 아기 모습</div>
+            <div class="rc-sub" id="days100-sub">AI가 그린 100일 아기 사진</div>
+          </div>
+        </div>
+        <div class="result-card-body"><img id="days100-result-img" src="" alt="100일 모습" /></div>
+        <div class="result-card-footer">
+          <a class="download-btn" id="days100-download-btn" href="#" download="BABYBAB_100일모습.png">⬇ 저장하기</a>
+        </div>
+      </div>
+
       <div class="action-btns">
-        <button class="btn-secondary" onclick="retry()">🔄 다시 만들기</button>
-        <button class="btn-primary" onclick="reset()">🏠 처음으로</button>
+        <button class="btn-secondary" onclick="retry100days()">🔄 100일 다시</button>
+        <button class="btn-secondary" onclick="resetAll()">🏠 처음으로</button>
       </div>
     </div>
 
@@ -289,54 +232,30 @@
 
   <script>
     const VERCEL_API = "/api/gemini";
-
     const PROMPTS = {
-      born: `Upgrade the uploaded image into a pristine, ultra-high-definition cinematic version while preserving the subject with absolute fidelity. The person's identity, facial anatomy, expression, body posture, clothing, accessories, environment, framing, and overall composition must remain completely unchanged. Do not modify, reinterpret, replace, or introduce any new visual elements. Reconstruct and refine micro-level details including precise facial contours, authentic skin texture with naturally visible pores, individually defined hair strands, sharp and lifelike eyes, and clean, well-resolved edges throughout the image. Enhance dynamic range, contrast, and dimensional depth using balanced, studio-quality cinematic lighting that respects the original light direction and scene realism. The result should feel like a professional high-end remaster — poster-level photorealism with accurate textures and zero stylistic alteration. Output in true 8K resolution with production-grade clarity comparable to ProRes quality. Maintain strict source integrity — improve quality only, change nothing else. Render the skin with the soft, smooth, and delicate texture of a newborn baby — peachy-pink tone, ultra-fine surface with no blemishes, capturing the realistic translancency and gentle plumpness of freshly born infant skin. Focus on the baby's face from the uploaded image as the central subject, depicted as a peaceful newborn gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Present the final result as a elegant photocard format — clean white card with soft rounded corners, subtle pastel border, and gentle drop shadow. Emboss the brand logo text "BABYBAB" in a refined minimal English serif font at the bottom of the card, small and tasteful, as if engraved or printed in soft gold or white ink.`,
-      "100days_no_parents": `Generate a photorealistic portrait of a beautiful healthy Korean baby at exactly 100 days old. Chubby cheeks, bright curious eyes, smooth clear skin, wearing a traditional Korean white 백일 hanbok outfit. Soft studio lighting, white background, professional newborn photography style, ultra-high-definition 8K resolution. Photorealistic.`,
-      "100days_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby at 100 days old. The baby should naturally inherit and blend the parents' facial features — eye shape, nose bridge, face structure. Korean baby, chubby cheeks, bright eyes, smooth skin, wearing a traditional white 백일 hanbok. Soft studio lighting, white background, professional photography, 8K ultra-high-definition. Photorealistic.`,
+      born: `Upgrade the uploaded image into a pristine, ultra-high-definition cinematic version while preserving the subject with absolute fidelity. The person's identity, facial anatomy, expression, body posture, clothing, accessories, environment, framing, and overall composition must remain completely unchanged. Do not modify, reinterpret, replace, or introduce any new visual elements. Reconstruct and refine micro-level details including precise facial contours, authentic skin texture with naturally visible pores, individually defined hair strands, sharp and lifelike eyes, and clean, well-resolved edges throughout the image. Enhance dynamic range, contrast, and dimensional depth using balanced, studio-quality cinematic lighting that respects the original light direction and scene realism. The result should feel like a professional high-end remaster — poster-level photorealism with accurate textures and zero stylistic alteration. Output in true 8K resolution with production-grade clarity comparable to ProRes quality. Maintain strict source integrity — improve quality only, change nothing else. Render the skin with the soft, smooth, and delicate texture of a newborn baby — peachy-pink tone, ultra-fine surface with no blemishes, capturing the realistic translucency and gentle plumpness of freshly born infant skin. The baby must have thick, dark black hair typical of a Korean newborn. Focus on the baby's face from the uploaded image as the central subject, depicted as a peaceful newborn gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Present the final result as an elegant photocard format — clean white card with soft rounded corners, subtle pastel border, and gentle drop shadow. Emboss the brand logo text "BABYBAB" in a refined minimal English serif font at the bottom of the card, small and tasteful, as if engraved or printed in soft gold or white ink.`,
+      "100days_no_parents": `Generate a photorealistic portrait of a beautiful healthy Korean baby at exactly 100 days old. The baby must have thick, dark black hair. Chubby cheeks, bright curious eyes, smooth clear skin, wearing a traditional Korean white 백일 hanbok outfit. Soft studio lighting, white background, professional newborn photography style, ultra-high-definition 8K resolution. Photorealistic. Present as an elegant photocard with "BABYBAB" logo engraved at the bottom in soft gold serif font.`,
+      "100days_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby at 100 days old. The baby must have thick, dark black hair. The baby should naturally inherit and blend the parents' facial features — eye shape, nose bridge, face structure. Korean baby, chubby cheeks, bright eyes, smooth skin, wearing a traditional white 백일 hanbok. Soft studio lighting, white background, professional photography, 8K ultra-high-definition. Photorealistic. Present as an elegant photocard with "BABYBAB" logo engraved at the bottom in soft gold serif font.`,
     };
 
-    let currentTab = "born";
     let files = { ultrasound: null, couple: null };
+    let bornImageSrc = null;
 
-    function switchTab(tab) {
-      currentTab = tab;
-      document.getElementById("tab-born").classList.toggle("active", tab === "born");
-      document.getElementById("tab-100days").classList.toggle("active", tab === "100days");
-      document.getElementById("zone-couple").classList.toggle("hidden", tab === "born");
-      updateInfo();
-      updateCTA();
-      hideError();
-    }
-
-    function updateInfo() {
-      const box = document.getElementById("info-box");
-      if (currentTab === "born") {
-        box.textContent = "🩻 초음파 사진을 분석해서 신생아 때의 실제 모습을 AI로 생성해요";
-      } else if (files.couple) {
-        box.textContent = "👨‍👩‍👧 부모님 얼굴 특징을 반영해서 100일 아가 사진을 만들어드려요";
-      } else {
-        box.textContent = "🎂 초음파 사진 기반으로 100일 아가 모습을 예측해요 (부모님 사진 추가 시 닮은꼴 반영!)";
-      }
-    }
-
-    function updateCTA() {
-      const btn = document.getElementById("cta-btn");
-      if (!files.ultrasound) {
-        btn.disabled = true;
-        btn.textContent = "초음파 사진을 먼저 올려주세요";
-      } else {
-        btn.disabled = false;
-        btn.textContent = currentTab === "born" ? "✨ 태어날 모습 보기" : "✨ 100일 모습 보기";
-      }
+    function setStep(n) {
+      [1,2,3].forEach(i => {
+        const c = document.getElementById(`sc${i}`);
+        c.className = "step-circle " + (i < n ? "done" : i === n ? "active" : "idle");
+        c.textContent = i < n ? "✓" : String(i);
+      });
+      [1,2].forEach(i => {
+        document.getElementById(`sl${i}`).className = "step-line" + (i < n ? " done" : "");
+      });
     }
 
     function handleFile(event, type) {
       const file = event.target.files[0];
-      if (!file) return;
-      loadFile(file, type);
+      if (file) loadFile(file, type);
     }
-
     function loadFile(file, type) {
       if (!file.type.startsWith("image/")) return;
       const reader = new FileReader();
@@ -345,12 +264,15 @@
         document.getElementById(`zone-${type}-empty`).classList.add("hidden");
         document.getElementById(`zone-${type}-preview`).classList.remove("hidden");
         document.getElementById(`preview-${type}`).src = e.target.result;
-        if (type === "ultrasound") document.getElementById("zone-ultrasound").style.cursor = "default";
-        updateCTA(); updateInfo(); hideError();
+        if (type === "ultrasound") {
+          document.getElementById("zone-ultrasound").style.cursor = "default";
+          const btn = document.getElementById("btn-step1");
+          btn.disabled = false;
+          btn.textContent = "✨ 태어날 모습 보기";
+        }
       };
       reader.readAsDataURL(file);
     }
-
     function removeFile(event, type) {
       event.stopPropagation();
       files[type] = null;
@@ -358,124 +280,130 @@
       document.getElementById(`zone-${type}-preview`).classList.add("hidden");
       document.getElementById(`preview-${type}`).src = "";
       document.getElementById(`input-${type}`).value = "";
-      if (type === "ultrasound") document.getElementById("zone-ultrasound").style.cursor = "pointer";
-      updateCTA(); updateInfo();
+      if (type === "ultrasound") {
+        document.getElementById("zone-ultrasound").style.cursor = "pointer";
+        const btn = document.getElementById("btn-step1");
+        btn.disabled = true;
+        btn.textContent = "초음파 사진을 먼저 올려주세요";
+      }
     }
-
     function onDrag(event, zoneId, active) {
       event.preventDefault();
       document.getElementById(zoneId).classList.toggle("drag", active);
     }
-
-    function onDrop(event, type) {
+    function onDropFile(event, type) {
       event.preventDefault();
       document.getElementById(`zone-${type}`).classList.remove("drag");
       const file = event.dataTransfer.files[0];
       if (file) loadFile(file, type);
     }
 
-    function hideError() {
-      document.getElementById("error-box").classList.add("hidden");
+    async function callGemini(prompt, imageBase64, imageMimeType) {
+      const res = await fetch(VERCEL_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, imageBase64, imageMimeType })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+      for (const candidate of data.candidates || []) {
+        for (const part of candidate.content?.parts || []) {
+          if (part.inlineData?.mimeType?.startsWith("image/")) {
+            return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+          }
+        }
+      }
+      throw new Error("이미지가 생성되지 않았어요. 다시 시도해주세요.");
     }
 
-    function showError(msg) {
-      const box = document.getElementById("error-box");
-      box.textContent = "⚠️ " + msg;
-      box.classList.remove("hidden");
-    }
-
-    async function run() {
+    async function runBorn() {
       if (!files.ultrasound) return;
-      document.getElementById("upload-section").classList.add("hidden");
-      document.getElementById("spinner").classList.remove("hidden");
-      document.getElementById("result-section").classList.add("hidden");
-
-      const spinnerText = document.getElementById("spinner-text");
-      spinnerText.textContent = currentTab === "born" ? "아가의 태어날 모습을 그리는 중..." : "100일 아가 모습을 그리는 중...";
-
+      document.getElementById("step1-section").classList.add("hidden");
+      document.getElementById("error-step1").classList.add("hidden");
+      showSpinner("아가의 태어날 모습을 그리는 중...");
+      setStep(2);
       try {
-        let prompt, imageBase64, imageMimeType;
-
-        if (currentTab === "born") {
-          prompt = PROMPTS.born;
-          imageBase64 = files.ultrasound.base64;
-          imageMimeType = files.ultrasound.mimeType;
-        } else {
-          if (files.couple) {
-            prompt = PROMPTS["100days_with_parents"];
-            imageBase64 = files.couple.base64;
-            imageMimeType = files.couple.mimeType;
-          } else {
-            prompt = PROMPTS["100days_no_parents"];
-            imageBase64 = files.ultrasound.base64;
-            imageMimeType = files.ultrasound.mimeType;
-          }
-        }
-
-        const res = await fetch(VERCEL_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, imageBase64, imageMimeType })
-        });
-
-        const data = await res.json();
-        if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-
-        let imgSrc = null;
-        for (const candidate of data.candidates || []) {
-          for (const part of candidate.content?.parts || []) {
-            if (part.inlineData?.mimeType?.startsWith("image/")) {
-              imgSrc = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-            }
-          }
-        }
-
-        if (!imgSrc) throw new Error("이미지가 생성되지 않았어요. 다시 시도해주세요.");
-
-        // Show result
-        document.getElementById("result-img").src = imgSrc;
-        document.getElementById("download-btn").href = imgSrc;
-        if (currentTab === "born") {
-          document.getElementById("result-emoji").textContent = "👶";
-          document.getElementById("result-title").textContent = "태어날 아기 모습";
-          document.getElementById("result-sub").textContent = "초음파로 유추한 신생아 모습";
-        } else {
-          document.getElementById("result-emoji").textContent = "🎂";
-          document.getElementById("result-title").textContent = "100일 아기 모습";
-          document.getElementById("result-sub").textContent = files.couple ? "부모님 닮은꼴 반영된 100일 사진" : "AI가 그린 100일 아기 사진";
-        }
-
-        document.getElementById("spinner").classList.add("hidden");
-        document.getElementById("result-section").classList.remove("hidden");
-
-      } catch (e) {
-        document.getElementById("spinner").classList.add("hidden");
-        document.getElementById("upload-section").classList.remove("hidden");
-        showError(e.message);
+        bornImageSrc = await callGemini(PROMPTS.born, files.ultrasound.base64, files.ultrasound.mimeType);
+        document.getElementById("born-result-img").src = bornImageSrc;
+        document.getElementById("born-download-btn").href = bornImageSrc;
+        document.getElementById("born-result-img2").src = bornImageSrc;
+        document.getElementById("born-download-btn2").href = bornImageSrc;
+        hideSpinner();
+        document.getElementById("step2-section").classList.remove("hidden");
+      } catch(e) {
+        hideSpinner();
+        document.getElementById("step1-section").classList.remove("hidden");
+        const err = document.getElementById("error-step1");
+        err.textContent = "⚠️ " + e.message;
+        err.classList.remove("hidden");
+        setStep(1);
       }
     }
 
-    function retry() {
-      document.getElementById("result-section").classList.add("hidden");
-      document.getElementById("upload-section").classList.remove("hidden");
+    async function run100days() {
+      document.getElementById("step2-section").classList.add("hidden");
+      showSpinner("100일 아가 모습을 그리는 중...");
+      setStep(3);
+      try {
+        let imgSrc;
+        if (files.couple) {
+          imgSrc = await callGemini(PROMPTS["100days_with_parents"], files.couple.base64, files.couple.mimeType);
+          document.getElementById("days100-sub").textContent = "부모님 닮은꼴 반영된 100일 사진";
+        } else {
+          imgSrc = await callGemini(PROMPTS["100days_no_parents"], files.ultrasound.base64, files.ultrasound.mimeType);
+          document.getElementById("days100-sub").textContent = "AI가 그린 100일 아기 사진";
+        }
+        document.getElementById("days100-result-img").src = imgSrc;
+        document.getElementById("days100-download-btn").href = imgSrc;
+        hideSpinner();
+        document.getElementById("step3-section").classList.remove("hidden");
+      } catch(e) {
+        hideSpinner();
+        document.getElementById("step2-section").classList.remove("hidden");
+        const err = document.getElementById("error-step2");
+        err.textContent = "⚠️ " + e.message;
+        err.classList.remove("hidden");
+        setStep(2);
+      }
     }
 
-    function reset() {
+    function showSpinner(text) {
+      document.getElementById("spinner-text").textContent = text;
+      document.getElementById("spinner").classList.remove("hidden");
+    }
+    function hideSpinner() {
+      document.getElementById("spinner").classList.add("hidden");
+    }
+    function retryBorn() {
+      document.getElementById("step2-section").classList.add("hidden");
+      document.getElementById("step1-section").classList.remove("hidden");
+      setStep(1);
+    }
+    function retry100days() {
+      document.getElementById("step3-section").classList.add("hidden");
+      document.getElementById("step2-section").classList.remove("hidden");
+      setStep(2);
+    }
+    function resetAll() {
       files = { ultrasound: null, couple: null };
-      ["ultrasound", "couple"].forEach(type => {
+      bornImageSrc = null;
+      ["ultrasound","couple"].forEach(type => {
         document.getElementById(`zone-${type}-empty`).classList.remove("hidden");
         document.getElementById(`zone-${type}-preview`).classList.add("hidden");
         document.getElementById(`preview-${type}`).src = "";
-        const input = document.getElementById(`input-${type}`);
-        if (input) input.value = "";
+        const inp = document.getElementById(`input-${type}`);
+        if (inp) inp.value = "";
       });
       document.getElementById("zone-ultrasound").style.cursor = "pointer";
-      currentTab = "born";
-      switchTab("born");
-      document.getElementById("result-section").classList.add("hidden");
-      document.getElementById("upload-section").classList.remove("hidden");
-      hideError();
-      updateCTA();
+      const btn = document.getElementById("btn-step1");
+      btn.disabled = true;
+      btn.textContent = "초음파 사진을 먼저 올려주세요";
+      document.getElementById("step2-section").classList.add("hidden");
+      document.getElementById("step3-section").classList.add("hidden");
+      document.getElementById("step1-section").classList.remove("hidden");
+      document.getElementById("error-step1").classList.add("hidden");
+      document.getElementById("error-step2").classList.add("hidden");
+      setStep(1);
     }
   </script>
 </body>
