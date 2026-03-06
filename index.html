@@ -233,9 +233,9 @@
   <script>
     const VERCEL_API = "/api/gemini";
     const PROMPTS = {
-      born: `Upgrade the uploaded image into a pristine, ultra-high-definition cinematic version while preserving the subject with absolute fidelity. The person's identity, facial anatomy, expression, body posture, clothing, accessories, environment, framing, and overall composition must remain completely unchanged. Do not modify, reinterpret, replace, or introduce any new visual elements. Reconstruct and refine micro-level details including precise facial contours, authentic skin texture with naturally visible pores, individually defined hair strands, sharp and lifelike eyes, and clean, well-resolved edges throughout the image. Enhance dynamic range, contrast, and dimensional depth using balanced, studio-quality cinematic lighting that respects the original light direction and scene realism. The result should feel like a professional high-end remaster — poster-level photorealism with accurate textures and zero stylistic alteration. Output in true 8K resolution with production-grade clarity comparable to ProRes quality. Maintain strict source integrity — improve quality only, change nothing else. Render the skin with the soft, smooth, and delicate texture of a newborn baby — peachy-pink tone, ultra-fine surface with no blemishes, capturing the realistic translucency and gentle plumpness of freshly born infant skin. The baby must have thick, dark black hair typical of a Korean newborn. Focus on the baby's face from the uploaded image as the central subject, depicted as a peaceful newborn gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Present the final result as an elegant photocard format — clean white card with soft rounded corners, subtle pastel border, and gentle drop shadow. Emboss the brand logo text "BABYBAB" in a refined minimal English serif font at the bottom of the card, small and tasteful, as if engraved or printed in soft gold or white ink.`,
-      "100days_no_parents": `Generate a photorealistic portrait of a beautiful healthy Korean baby at exactly 100 days old. The baby must have thick, dark black hair. Chubby cheeks, bright curious eyes, smooth clear skin, wearing a traditional Korean white 백일 hanbok outfit. Soft studio lighting, white background, professional newborn photography style, ultra-high-definition 8K resolution. Photorealistic. Present as an elegant photocard with "BABYBAB" logo engraved at the bottom in soft gold serif font.`,
-      "100days_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby at 100 days old. The baby must have thick, dark black hair. The baby should naturally inherit and blend the parents' facial features — eye shape, nose bridge, face structure. Korean baby, chubby cheeks, bright eyes, smooth skin, wearing a traditional white 백일 hanbok. Soft studio lighting, white background, professional photography, 8K ultra-high-definition. Photorealistic. Present as an elegant photocard with "BABYBAB" logo engraved at the bottom in soft gold serif font.`,
+      born: `Upgrade the uploaded image into a pristine, ultra-high-definition cinematic version while preserving the subject with absolute fidelity. The person's identity, facial anatomy, expression, body posture, clothing, accessories, environment, framing, and overall composition must remain completely unchanged. Do not modify, reinterpret, replace, or introduce any new visual elements. Reconstruct and refine micro-level details including precise facial contours, authentic skin texture with naturally visible pores, individually defined hair strands, sharp and lifelike eyes, and clean, well-resolved edges throughout the image. Enhance dynamic range, contrast, and dimensional depth using balanced, studio-quality cinematic lighting that respects the original light direction and scene realism. The result should feel like a professional high-end remaster — poster-level photorealism with accurate textures and zero stylistic alteration. Output in true 8K resolution with production-grade clarity comparable to ProRes quality. Maintain strict source integrity — improve quality only, change nothing else. Render the skin with the soft, smooth, and delicate texture of a newborn baby — peachy-pink tone, ultra-fine surface with no blemishes, capturing the realistic translucency and gentle plumpness of freshly born infant skin. The baby must have thick, dark black hair typical of a Korean newborn, and fair, pale, porcelain-white Korean skin — bright and clean complexion with no darkness. Focus on the baby's face from the uploaded image as the central subject, depicted as a peaceful newborn gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Output as a clean centered portrait with soft studio lighting and white background. Present the final result as an elegant photocard format — clean white card with soft rounded corners, subtle pastel border, and gentle drop shadow. Emboss the brand logo text "BABYBAB" in a refined minimal English serif font at the bottom of the card, small and tasteful, as if engraved or printed in soft gold or white ink.`,
+      "100days_no_parents": `Generate a photorealistic portrait of a beautiful healthy Korean baby at exactly 100 days old. The baby must have thick, dark black hair and fair, pale, porcelain-white Korean skin — bright clean complexion. Chubby cheeks, bright curious eyes, smooth clear skin, wearing a traditional Korean white 백일 hanbok outfit. Soft studio lighting, clean white background, professional newborn photography style, ultra-high-definition 8K resolution. Centered portrait, photorealistic.`,
+      "100days_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby at 100 days old. The baby must have thick, dark black hair and fair, pale, porcelain-white Korean skin — bright clean complexion. The baby should naturally inherit and blend the parents' facial features — eye shape, nose bridge, face structure. Korean baby, chubby cheeks, bright eyes, smooth skin, wearing a traditional white 백일 hanbok. Soft studio lighting, clean white background, professional photography, 8K ultra-high-definition. Centered portrait, photorealistic.`,
     };
 
     let files = { ultrasound: null, couple: null };
@@ -298,6 +298,91 @@
       if (file) loadFile(file, type);
     }
 
+    // ── photocard renderer ──
+    function renderPhotocard(imgSrc, title) {
+      return new Promise((resolve) => {
+        const canvas = document.createElement("canvas");
+        const W = 800, H = 1100;
+        canvas.width = W; canvas.height = H;
+        const ctx = canvas.getContext("2d");
+
+        const img = new Image();
+        img.onload = () => {
+          // White card background
+          ctx.fillStyle = "#ffffff";
+          ctx.roundRect(0, 0, W, H, 40);
+          ctx.fill();
+
+          // Soft pastel pink border
+          ctx.strokeStyle = "#f8bbd0";
+          ctx.lineWidth = 8;
+          ctx.roundRect(16, 16, W - 32, H - 32, 32);
+          ctx.stroke();
+
+          // Inner thin border
+          ctx.strokeStyle = "#fce4ec";
+          ctx.lineWidth = 2;
+          ctx.roundRect(28, 28, W - 56, H - 56, 26);
+          ctx.stroke();
+
+          // Baby image — centered, fills upper portion
+          const imgAreaY = 60;
+          const imgAreaH = H - 220;
+          const imgAreaW = W - 80;
+
+          // Clip image to rounded rect
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(40, imgAreaY, imgAreaW, imgAreaH, 20);
+          ctx.clip();
+
+          // Draw image cover-fit
+          const scale = Math.max(imgAreaW / img.width, imgAreaH / img.height);
+          const drawW = img.width * scale;
+          const drawH = img.height * scale;
+          const drawX = 40 + (imgAreaW - drawW) / 2;
+          const drawY = imgAreaY + (imgAreaH - drawH) / 2;
+          ctx.drawImage(img, drawX, drawY, drawW, drawH);
+          ctx.restore();
+
+          // Subtle bottom gradient overlay
+          const grad = ctx.createLinearGradient(0, H - 200, 0, H);
+          grad.addColorStop(0, "rgba(255,255,255,0)");
+          grad.addColorStop(1, "rgba(255,255,255,0.95)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, H - 200, W, 200);
+
+          // Divider line
+          ctx.strokeStyle = "#f8bbd0";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(80, H - 160);
+          ctx.lineTo(W - 80, H - 160);
+          ctx.stroke();
+
+          // BABYBAB logo
+          ctx.fillStyle = "#c9a96e";
+          ctx.font = "bold 36px 'Georgia', serif";
+          ctx.textAlign = "center";
+          ctx.letterSpacing = "8px";
+          ctx.fillText("BABYBAB", W / 2, H - 110);
+
+          // Subtitle
+          ctx.fillStyle = "#c8a8c0";
+          ctx.font = "16px 'Georgia', serif";
+          ctx.letterSpacing = "3px";
+          ctx.fillText(title, W / 2, H - 72);
+
+          // Small decorative hearts
+          ctx.font = "14px serif";
+          ctx.fillText("♡  ♡  ♡", W / 2, H - 44);
+
+          resolve(canvas.toDataURL("image/png"));
+        };
+        img.src = imgSrc;
+      });
+    }
+
     async function callGemini(prompt, imageBase64, imageMimeType) {
       const res = await fetch(VERCEL_API, {
         method: "POST",
@@ -324,10 +409,11 @@
       setStep(2);
       try {
         bornImageSrc = await callGemini(PROMPTS.born, files.ultrasound.base64, files.ultrasound.mimeType);
-        document.getElementById("born-result-img").src = bornImageSrc;
-        document.getElementById("born-download-btn").href = bornImageSrc;
-        document.getElementById("born-result-img2").src = bornImageSrc;
-        document.getElementById("born-download-btn2").href = bornImageSrc;
+        const bornCard = await renderPhotocard(bornImageSrc, "NEWBORN PORTRAIT");
+        document.getElementById("born-result-img").src = bornCard;
+        document.getElementById("born-download-btn").href = bornCard;
+        document.getElementById("born-result-img2").src = bornCard;
+        document.getElementById("born-download-btn2").href = bornCard;
         hideSpinner();
         document.getElementById("step2-section").classList.remove("hidden");
       } catch(e) {
@@ -353,8 +439,9 @@
           imgSrc = await callGemini(PROMPTS["100days_no_parents"], files.ultrasound.base64, files.ultrasound.mimeType);
           document.getElementById("days100-sub").textContent = "AI가 그린 100일 아기 사진";
         }
-        document.getElementById("days100-result-img").src = imgSrc;
-        document.getElementById("days100-download-btn").href = imgSrc;
+        const days100Card = await renderPhotocard(imgSrc, "100 DAYS PORTRAIT");
+        document.getElementById("days100-result-img").src = days100Card;
+        document.getElementById("days100-download-btn").href = days100Card;
         hideSpinner();
         document.getElementById("step3-section").classList.remove("hidden");
       } catch(e) {
