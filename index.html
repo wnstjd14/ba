@@ -156,8 +156,22 @@
             <div class="rc-sub">초음파로 유추한 신생아 모습</div>
           </div>
         </div>
-        <div class="result-card-body"><img id="born-result-img" src="" alt="태어날 모습" /></div>
-        <div class="result-card-footer">
+        <div class="result-card-body">
+          <!-- 일반 결과 이미지 -->
+          <div id="born-img-wrap" style="position:relative">
+            <img id="born-result-img" src="" alt="태어날 모습" style="width:100%;border-radius:14px;display:block" />
+            <div id="crop-hint" style="margin-top:10px;text-align:center;font-size:0.8rem;color:#9e8ea8;font-family:'Gowun Dodum',sans-serif">
+              ✂️ 얼굴 부분을 드래그해서 잘라낼 수 있어요!
+            </div>
+          </div>
+          <!-- 크롭 영역 -->
+          <div id="crop-container" class="hidden" style="position:relative;margin-top:8px;cursor:crosshair;border-radius:14px;overflow:hidden;line-height:0">
+            <img id="crop-source-img" src="" alt="크롭원본" style="width:100%;display:block;border-radius:14px" />
+            <div id="crop-selection" style="position:absolute;border:2.5px solid #e91e8c;background:rgba(233,30,140,0.08);display:none;pointer-events:none"></div>
+          </div>
+        </div>
+        <div class="result-card-footer" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+          <button onclick="startCrop()" id="btn-crop" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.9);color:#e91e8c;border:2px solid #f48fb1;padding:8px 16px;border-radius:20px;font-size:0.8rem;font-family:'Gowun Dodum',sans-serif;font-weight:700;cursor:pointer">✂️ 얼굴 잘라내기</button>
           <a class="download-btn" id="born-download-btn" href="#" download="BABYBAB_태어날모습.png">⬇ 저장하기</a>
         </div>
       </div>
@@ -247,7 +261,7 @@
   <script>
     const VERCEL_API = "/api/gemini";
     const PROMPTS = {
-      born: `Generate a photorealistic portrait of a beautiful Korean newborn baby at birth. The baby has absolutely fair, pale, porcelain-white Korean skin — perfectly clean, smooth, flawless complexion with a soft peachy-pink glow, zero blemishes. Minimal sparse fine dark hair — just a very light dusting on top of the head. Eyes gently closed in peaceful sleep, tiny soft nose, delicate rosebud lips. The baby's face is the sole focus — centered, close-up — gently swaddled and completely wrapped in a pure bright white soft blanket, with ONLY the face peeking out from the center of the white fabric. Clean white studio background. Soft diffused studio lighting from above. Ultra-high-definition 8K, cinematic quality, professional newborn photography, poster-level photorealism.`,
+      born: `Upgrade the uploaded image into a pristine, ultra-high-definition cinematic version while preserving the subject with absolute fidelity. The person's identity, facial anatomy, expression, body posture, clothing, accessories, environment, framing, and overall composition must remain completely unchanged. Do not modify, reinterpret, replace, or introduce any new visual elements. Reconstruct and refine micro-level details including precise facial contours, authentic skin texture with naturally visible pores, individually defined hair strands, sharp and lifelike eyes, and clean, well-resolved edges throughout the image. Enhance dynamic range, contrast, and dimensional depth using balanced, studio-quality cinematic lighting that respects the original light direction and scene realism. The result should feel like a professional high-end remaster — poster-level photorealism with accurate textures and zero stylistic alteration. Output in true 8K resolution with production-grade clarity comparable to ProRes quality. Maintain strict source integrity — improve quality only, change nothing else.`,
       "100days_girl_no_parents": `Based on this newborn baby photo, generate a photorealistic portrait of this same baby at exactly 100 days old — a girl. The baby girl has fair, pale, porcelain-white Korean skin, soft chubby cheeks, bright curious eyes. She has a perfect blunt bob haircut — straight, even, chin-length dark hair cut in a clean straight line all around, with soft bangs. She is wearing a traditional Korean white 백일 hanbok with delicate pink floral embroidery. Soft studio lighting, clean white background, professional baby photography, ultra-high-definition 8K. Centered portrait, photorealistic.`,
       "100days_boy_no_parents": `Based on this newborn baby photo, generate a photorealistic portrait of this same baby at exactly 100 days old — a boy. The baby boy has fair, pale, porcelain-white Korean skin, soft chubby cheeks, bright curious eyes. He has adorable soft curly permed hair — loose, bouncy dark curls all over the head, cute and fluffy. He is wearing a traditional Korean white 백일 hanbok with subtle navy blue embroidery. Soft studio lighting, clean white background, professional baby photography, ultra-high-definition 8K. Centered portrait, photorealistic.`,
       "100days_girl_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby girl at 100 days old. The baby inherits the parents' facial features naturally — eye shape, nose, face structure. Fair, pale, porcelain-white Korean skin, chubby cheeks, bright eyes. She has a perfect blunt bob haircut — straight, even, chin-length dark hair cut in a clean straight line all around, with soft bangs. She is wearing a traditional Korean white 백일 hanbok with delicate pink floral embroidery. Soft studio lighting, white background, professional photography, 8K. Centered portrait, photorealistic.`,
@@ -451,7 +465,7 @@
       showSpinner("아가의 태어날 모습을 그리는 중...", "사랑스러운 아가가 태어날 모습이 너무 기대돼요! 💗");
       setStep(2);
       try {
-        bornRawSrc = await callGemini(PROMPTS.born, null, null);
+        bornRawSrc = await callGemini(PROMPTS.born, files.ultrasound.base64, files.ultrasound.mimeType);
         bornImageSrc = bornRawSrc;
         const bornCard = await renderPhotocard(bornImageSrc, "NEWBORN PORTRAIT");
         document.getElementById("born-result-img").src = bornCard;
