@@ -143,7 +143,7 @@
     <div class="spinner hidden" id="spinner">
       <div class="spinner-emoji">🍼</div>
       <div class="spinner-text" id="spinner-text">아가의 모습을 그리는 중...</div>
-      <div class="spinner-sub">Gemini AI가 열심히 작업하고 있어요 💗<br/>잠시만 기다려주세요 (10~20초)</div>
+      <div class="spinner-sub">사랑스러운 아가가 태어날 모습이 너무 기대돼요! 💗<br/>잠시만 기다려주세요 (10~20초)</div>
     </div>
 
     <!-- STEP 2: 태어날 모습 결과 + 100일 유도 -->
@@ -448,7 +448,7 @@
       if (!files.ultrasound) return;
       document.getElementById("step1-section").classList.add("hidden");
       document.getElementById("error-step1").classList.add("hidden");
-      showSpinner("아가의 태어날 모습을 그리는 중...");
+      showSpinner("아가의 태어날 모습을 그리는 중...", "사랑스러운 아가가 태어날 모습이 너무 기대돼요! 💗");
       setStep(2);
       try {
         bornRawSrc = await callGemini(PROMPTS.born, null, null);
@@ -479,7 +479,7 @@
       }
       document.getElementById("step2-section").classList.add("hidden");
       document.getElementById("error-step2").classList.add("hidden");
-      showSpinner("100일 아가 모습을 그리는 중...");
+      showSpinner("100일 아가 모습을 그리는 중...", "우리 아가의 백일, 어떤 모습일지 설레지 않나요? 💕");
       setStep(3);
       try {
         let imgSrc;
@@ -511,8 +511,9 @@
       }
     }
 
-    function showSpinner(text) {
+    function showSpinner(text, sub) {
       document.getElementById("spinner-text").textContent = text;
+      if (sub) document.getElementById("spinner").querySelector(".spinner-sub").innerHTML = sub + "<br/>잠시만 기다려주세요 (10~20초)";
       document.getElementById("spinner").classList.remove("hidden");
     }
     function hideSpinner() {
