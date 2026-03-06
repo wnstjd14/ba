@@ -164,7 +164,21 @@
 
       <div class="step2-panel">
         <div class="step2-title">🎂 100일 모습도 보고 싶으세요?</div>
-        <div class="step2-desc">엄마 아빠 사진을 올리면 닮은꼴이 반영된 100일 사진을 만들어드려요!<br/>사진 없이도 생성 가능해요 😊</div>
+        <div class="step2-desc">태어날 모습을 바탕으로 100일 사진을 만들어드려요! 성별을 선택하고 부모님 사진도 추가해보세요 😊</div>
+
+        <!-- 성별 선택 -->
+        <div style="margin-bottom:18px">
+          <div style="font-family:'Gowun Dodum',sans-serif;font-size:0.9rem;font-weight:700;color:#5d4e6d;margin-bottom:10px">👶 아기 성별을 선택해주세요</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <button id="gender-girl" onclick="selectGender('girl')" style="padding:14px;border:2px solid #f48fb1;border-radius:16px;background:rgba(255,255,255,0.7);cursor:pointer;font-family:'Gowun Dodum',sans-serif;font-size:0.9rem;font-weight:700;color:#9e8ea8;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:1.8rem">👧</span>여아
+            </button>
+            <button id="gender-boy" onclick="selectGender('boy')" style="padding:14px;border:2px solid #b2dfdb;border-radius:16px;background:rgba(255,255,255,0.7);cursor:pointer;font-family:'Gowun Dodum',sans-serif;font-size:0.9rem;font-weight:700;color:#9e8ea8;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:1.8rem">👦</span>남아
+            </button>
+          </div>
+        </div>
+
         <div class="upload-zone optional" id="zone-couple"
           onclick="document.getElementById('input-couple').click()"
           ondragover="onDrag(event,'zone-couple',true)"
@@ -234,12 +248,41 @@
     const VERCEL_API = "/api/gemini";
     const PROMPTS = {
       born: `Generate a photorealistic portrait of a beautiful Korean newborn baby at birth. The baby has fair, pale, porcelain-white Korean skin with a peachy-pink glow, minimal, fine, sparse dark black hair typical of a newborn — just a light dusting of soft dark hair on the head, not thick, soft delicate facial features, eyes gently closed in peaceful sleep. The baby is gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Soft studio lighting, clean white background, professional newborn photography style, ultra-high-definition 8K resolution. Photorealistic, cinematic quality, poster-level realism.`,
-      "100days_no_parents": `Generate a photorealistic portrait of a beautiful healthy Korean baby at exactly 100 days old. The baby must have thick, dark black hair and fair, pale, porcelain-white Korean skin — bright clean complexion. Chubby cheeks, bright curious eyes, smooth clear skin, wearing a traditional Korean white 백일 hanbok outfit. Soft studio lighting, clean white background, professional newborn photography style, ultra-high-definition 8K resolution. Centered portrait, photorealistic.`,
-      "100days_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby at 100 days old. The baby must have thick, dark black hair and fair, pale, porcelain-white Korean skin — bright clean complexion. The baby should naturally inherit and blend the parents' facial features — eye shape, nose bridge, face structure. Korean baby, chubby cheeks, bright eyes, smooth skin, wearing a traditional white 백일 hanbok. Soft studio lighting, clean white background, professional photography, 8K ultra-high-definition. Centered portrait, photorealistic.`,
+      "100days_girl_no_parents": `Based on this newborn baby photo, generate a photorealistic portrait of this same baby at exactly 100 days old — a girl. The baby girl has fair, pale, porcelain-white Korean skin, soft chubby cheeks, bright curious eyes. She has a cute short bob haircut with fine soft dark hair, adorned with a tiny pastel pink bow or hair pin. She is wearing a traditional Korean white 백일 hanbok with delicate pink floral embroidery. Soft studio lighting, clean white background, professional baby photography, ultra-high-definition 8K. Centered portrait, photorealistic.`,
+      "100days_boy_no_parents": `Based on this newborn baby photo, generate a photorealistic portrait of this same baby at exactly 100 days old — a boy. The baby boy has fair, pale, porcelain-white Korean skin, soft chubby cheeks, bright curious eyes. He has a neat short boyish haircut with fine soft dark hair, slightly parted at the side. He is wearing a traditional Korean white 백일 hanbok with subtle navy blue or dark embroidery. Soft studio lighting, clean white background, professional baby photography, ultra-high-definition 8K. Centered portrait, photorealistic.`,
+      "100days_girl_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby girl at 100 days old. The baby inherits the parents' facial features naturally — eye shape, nose, face structure. Fair, pale, porcelain-white Korean skin, chubby cheeks, bright eyes. She has a cute short bob haircut with fine soft dark hair and a tiny pastel pink bow. She is wearing a traditional Korean white 백일 hanbok with delicate pink floral embroidery. Soft studio lighting, white background, professional photography, 8K. Centered portrait, photorealistic.`,
+      "100days_boy_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby boy at 100 days old. The baby inherits the parents' facial features naturally — eye shape, nose, face structure. Fair, pale, porcelain-white Korean skin, chubby cheeks, bright eyes. He has a neat short boyish haircut with fine soft dark hair slightly parted at the side. He is wearing a traditional Korean white 백일 hanbok with subtle navy blue embroidery. Soft studio lighting, white background, professional photography, 8K. Centered portrait, photorealistic.`,
     };
 
     let files = { ultrasound: null, couple: null };
     let bornImageSrc = null;
+    let bornRawSrc = null;
+    let selectedGender = null;
+
+    function selectGender(g) {
+      selectedGender = g;
+      const girlBtn = document.getElementById("gender-girl");
+      const boyBtn = document.getElementById("gender-boy");
+      if (g === "girl") {
+        girlBtn.style.background = "linear-gradient(135deg,#f48fb1,#e91e8c)";
+        girlBtn.style.color = "#fff";
+        girlBtn.style.borderColor = "#e91e8c";
+        girlBtn.style.boxShadow = "0 4px 16px rgba(233,30,140,0.3)";
+        boyBtn.style.background = "rgba(255,255,255,0.7)";
+        boyBtn.style.color = "#9e8ea8";
+        boyBtn.style.borderColor = "#b2dfdb";
+        boyBtn.style.boxShadow = "none";
+      } else {
+        boyBtn.style.background = "linear-gradient(135deg,#4dd0e1,#0097a7)";
+        boyBtn.style.color = "#fff";
+        boyBtn.style.borderColor = "#0097a7";
+        boyBtn.style.boxShadow = "0 4px 16px rgba(0,151,167,0.3)";
+        girlBtn.style.background = "rgba(255,255,255,0.7)";
+        girlBtn.style.color = "#9e8ea8";
+        girlBtn.style.borderColor = "#f48fb1";
+        girlBtn.style.boxShadow = "none";
+      }
+    }
 
     function setStep(n) {
       [1,2,3].forEach(i => {
@@ -408,7 +451,8 @@
       showSpinner("아가의 태어날 모습을 그리는 중...");
       setStep(2);
       try {
-        bornImageSrc = await callGemini(PROMPTS.born, null, null);
+        bornRawSrc = await callGemini(PROMPTS.born, null, null);
+        bornImageSrc = bornRawSrc;
         const bornCard = await renderPhotocard(bornImageSrc, "NEWBORN PORTRAIT");
         document.getElementById("born-result-img").src = bornCard;
         document.getElementById("born-download-btn").href = bornCard;
@@ -427,19 +471,32 @@
     }
 
     async function run100days() {
+      if (!selectedGender) {
+        const err = document.getElementById("error-step2");
+        err.textContent = "⚠️ 여아 또는 남아를 선택해주세요!";
+        err.classList.remove("hidden");
+        return;
+      }
       document.getElementById("step2-section").classList.add("hidden");
+      document.getElementById("error-step2").classList.add("hidden");
       showSpinner("100일 아가 모습을 그리는 중...");
       setStep(3);
       try {
         let imgSrc;
+        const cardTitle = selectedGender === "girl" ? "100 DAYS · 여아" : "100 DAYS · 남아";
         if (files.couple) {
-          imgSrc = await callGemini(PROMPTS["100days_with_parents"], files.couple.base64, files.couple.mimeType);
-          document.getElementById("days100-sub").textContent = "부모님 닮은꼴 반영된 100일 사진";
+          const promptKey = selectedGender === "girl" ? "100days_girl_with_parents" : "100days_boy_with_parents";
+          imgSrc = await callGemini(PROMPTS[promptKey], files.couple.base64, files.couple.mimeType);
+          document.getElementById("days100-sub").textContent = selectedGender === "girl" ? "부모님 닮은 여아 100일 사진" : "부모님 닮은 남아 100일 사진";
         } else {
-          imgSrc = await callGemini(PROMPTS["100days_no_parents"], null, null);
-          document.getElementById("days100-sub").textContent = "AI가 그린 100일 아기 사진";
+          const promptKey = selectedGender === "girl" ? "100days_girl_no_parents" : "100days_boy_no_parents";
+          // Use born raw image as reference
+          const bornBase64 = bornRawSrc ? bornRawSrc.split(",")[1] : null;
+          const bornMime = bornRawSrc ? "image/png" : null;
+          imgSrc = await callGemini(PROMPTS[promptKey], bornBase64, bornMime);
+          document.getElementById("days100-sub").textContent = selectedGender === "girl" ? "태어날 모습 기반 여아 100일 사진" : "태어날 모습 기반 남아 100일 사진";
         }
-        const days100Card = await renderPhotocard(imgSrc, "100 DAYS PORTRAIT");
+        const days100Card = await renderPhotocard(imgSrc, cardTitle);
         document.getElementById("days100-result-img").src = days100Card;
         document.getElementById("days100-download-btn").href = days100Card;
         hideSpinner();
@@ -473,7 +530,8 @@
     }
     function resetAll() {
       files = { ultrasound: null, couple: null };
-      bornImageSrc = null;
+      selectedGender = null;
+      bornRawSrc = null;
       ["ultrasound","couple"].forEach(type => {
         document.getElementById(`zone-${type}-empty`).classList.remove("hidden");
         document.getElementById(`zone-${type}-preview`).classList.add("hidden");
