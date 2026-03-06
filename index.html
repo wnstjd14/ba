@@ -233,7 +233,7 @@
   <script>
     const VERCEL_API = "/api/gemini";
     const PROMPTS = {
-      born: `Using the facial features and structure visible in this reference image, generate a photorealistic portrait of a beautiful Korean newborn baby at birth. The baby has fair, pale, porcelain-white Korean skin with a peachy-pink glow, minimal, fine, sparse dark black hair typical of a newborn — just a light dusting of soft dark hair on the head, not thick, soft delicate facial features, eyes gently closed in peaceful sleep. The baby is gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Soft studio lighting, clean white background, professional newborn photography style, ultra-high-definition 8K resolution. Photorealistic, cinematic quality, poster-level realism.`,
+      born: `Generate a photorealistic portrait of a beautiful Korean newborn baby at birth. The baby has fair, pale, porcelain-white Korean skin with a peachy-pink glow, minimal, fine, sparse dark black hair typical of a newborn — just a light dusting of soft dark hair on the head, not thick, soft delicate facial features, eyes gently closed in peaceful sleep. The baby is gently swaddled and wrapped inside a soft pure-white blanket, with only the face visible at the center. Soft studio lighting, clean white background, professional newborn photography style, ultra-high-definition 8K resolution. Photorealistic, cinematic quality, poster-level realism.`,
       "100days_no_parents": `Generate a photorealistic portrait of a beautiful healthy Korean baby at exactly 100 days old. The baby must have thick, dark black hair and fair, pale, porcelain-white Korean skin — bright clean complexion. Chubby cheeks, bright curious eyes, smooth clear skin, wearing a traditional Korean white 백일 hanbok outfit. Soft studio lighting, clean white background, professional newborn photography style, ultra-high-definition 8K resolution. Centered portrait, photorealistic.`,
       "100days_with_parents": `Looking carefully at the parents in this photo, generate a photorealistic portrait of their baby at 100 days old. The baby must have thick, dark black hair and fair, pale, porcelain-white Korean skin — bright clean complexion. The baby should naturally inherit and blend the parents' facial features — eye shape, nose bridge, face structure. Korean baby, chubby cheeks, bright eyes, smooth skin, wearing a traditional white 백일 hanbok. Soft studio lighting, clean white background, professional photography, 8K ultra-high-definition. Centered portrait, photorealistic.`,
     };
@@ -408,7 +408,7 @@
       showSpinner("아가의 태어날 모습을 그리는 중...");
       setStep(2);
       try {
-        bornImageSrc = await callGemini(PROMPTS.born, files.ultrasound.base64, files.ultrasound.mimeType);
+        bornImageSrc = await callGemini(PROMPTS.born, null, null);
         const bornCard = await renderPhotocard(bornImageSrc, "NEWBORN PORTRAIT");
         document.getElementById("born-result-img").src = bornCard;
         document.getElementById("born-download-btn").href = bornCard;
@@ -436,7 +436,7 @@
           imgSrc = await callGemini(PROMPTS["100days_with_parents"], files.couple.base64, files.couple.mimeType);
           document.getElementById("days100-sub").textContent = "부모님 닮은꼴 반영된 100일 사진";
         } else {
-          imgSrc = await callGemini(PROMPTS["100days_no_parents"], files.ultrasound.base64, files.ultrasound.mimeType);
+          imgSrc = await callGemini(PROMPTS["100days_no_parents"], null, null);
           document.getElementById("days100-sub").textContent = "AI가 그린 100일 아기 사진";
         }
         const days100Card = await renderPhotocard(imgSrc, "100 DAYS PORTRAIT");
