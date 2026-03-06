@@ -10,21 +10,20 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "*");
   res.setHeader("Access-Control-Max-Age", "86400");
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
   try {
     const { prompt, imageBase64, imageMimeType } = req.body;
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
     if (!GEMINI_KEY) throw new Error("API key not configured");
+
     const parts = [];
     if (imageBase64) {
       parts.push({ inlineData: { mimeType: imageMimeType, data: imageBase64 } });
     }
     parts.push({ text: prompt });
+
     const geminiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent?key=${GEMINI_KEY}`,
       {
@@ -32,12 +31,34 @@ export default async function handler(req, res) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ role: "user", parts }],
-          generationConfig: { responseModalities: ["IMAGE", "TEXT"] }
+          generationConfig: {
+            responseModalities: ["IMAGE", "TEXT"],
+            temperature: 1.0
+          }
         })
       }
     );
+
     const data = await geminiRes.json();
+
+    // 이미지가 없으면 전체 응답을 에러로 반환해서 디버깅
+    let hasImage = false;
+    for (const candidate of data.candidates || []) {
+      for (const part of candidate.content?.parts || []) {
+        if (part.inlineData?.mimeType?.startsWith("image/")) {
+          hasImage = true;
+        }
+      }
+    }
+
+    if (!hasImage) {
+      return res.status(200).json({ 
+        error: { message: "No image returned. Full response: " + JSON.stringify(data) }
+      });
+    }
+
     return res.status(200).json(data);
+
   } catch (err) {
     return res.status(500).json({ error: { message: err.message } });
   }
